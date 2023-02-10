@@ -2,7 +2,7 @@
 
 {% block content %}
     <h3>Register User </h3>
-    <form method="post" action="">
+    <form method="post" action="" class="col-md-6">
         {% csrf_token %}
         {{form.as_p}}
     <input type="submit" value="Register">
