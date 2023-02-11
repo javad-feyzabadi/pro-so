@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
-{% block content%}
-index
+{% block content %}
+    <div class="card">
+        {% for post in posts %}
+                <a href="" class="card-bady">{{post.body | truncatewords:8}}</a>
+        {% endfor %}
+    </div>
 {% endblock %}
