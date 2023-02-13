@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . models import Post
+from . models import Post,Comment
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -10,8 +10,13 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('body',)}
     raw_id_fields = ('user',)
     
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user','post','created','is_reply')
+    raw_id_fields = ('user','post','reply')
 
 admin.site.register(Post,PostAdmin)
+admin.site.register(Comment,CommentAdmin)
+
 
 
 
