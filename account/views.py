@@ -78,10 +78,12 @@ class UserProfileView(LoginRequiredMixin,View):
         user = get_object_or_404(User,pk = user_id)
         posts = user.posts.all()
         relations = Relations.objects.filter(from_user = request.user,to_user = user)
-        if relations:
+        if relations.exists():
             is_following = True
         return render(request,'account/profile.html',{'user':user,'posts':posts,'is_following':is_following})
 
+
+# PasswordReset
 
 class UserPasswordResetView(PasswordResetView):
     template_name = 'account/password_reset_form.html'
@@ -98,10 +100,14 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
 class UserPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'account/password_reset_complete.html'
 
+# End PasswordReset
+
+
+# Follow and UnFollow
 
 class UserFollowView(LoginRequiredMixin,View):
     def get(self,request,user_id):
-        user = User.objects.get(id = user_id) #oni ke mikhad follow beshe
+        user = User.objects.get(id = user_id) 
         relations = Relations.objects.filter(from_user = request.user , to_user = user)
         if relations.exists():
             messages.error(request,'You Already This User','danger')
@@ -120,4 +126,6 @@ class UserUnFollowView(LoginRequiredMixin,View):
         else:
             messages.error(request,'You Are Not Following This User','danger')
         return redirect('account:user_profile', user.id)
+
+# End Follow and UnFollow
 
