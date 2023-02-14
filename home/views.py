@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
-from . models import Post,Comment
+from . models import Post,Comment,Vote
 from . forms import PostCreateUpdateForm,ComentCreateForm,ComentReplyForm
 
 
@@ -30,7 +30,10 @@ class PostDetailView(View):
 
     def get(self,request,*args ,**kwargs):
         comments = self.post_instance.pcomments.filter(is_reply = False)
-        return render(request,'home/detail.html',{'post':self.post_instance , 'comments':comments,'form':self.form_class,'reply_form':self.form_class_reply})
+        can_like = False
+        if request.user.is_authenticated and self.post_instance.user_can_like(request.user):
+            can_like = True
+        return render(request,'home/detail.html',{'post':self.post_instance , 'comments':comments,'form':self.form_class,'reply_form':self.form_class_reply,'can_like':can_like})
 
     @method_decorator(login_required)
     def post(self,request,*args,**kwargs):
@@ -120,3 +123,15 @@ class PostAdeReplyView(LoginRequiredMixin,View):
             reply.save()
             messages.success(request,'Your Reply Submited Successfully','success')
         return redirect('home:post_detail', post.id, post.slug)
+
+
+class PostLikeView(LoginRequiredMixin,View):
+    def get(self,request,post_id):
+        post = get_object_or_404(Post,id = post_id)
+        like = Vote.objects.filter(post = post , user = request.user)
+        if like.exists():
+            messages.error(request,'You Have Already liked this Post','danger')
+        else:
+            Vote.objects.create(post = post , user = request.user)
+            messages.success(request,'You Liked This Post','success')
+        return redirect('home:post_detail',post.id,post.slug)
