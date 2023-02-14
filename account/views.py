@@ -10,7 +10,7 @@ from django.contrib.auth.views import (PasswordResetView,PasswordResetDoneView,
                                        PasswordResetCompleteView
 )
 
-from .forms import UserRegistrationForm,UserLoginForm
+from .forms import UserRegistrationForm,UserLoginForm,EditUserForm
 from . models import Relations
 
 from home.models import Post
@@ -135,3 +135,18 @@ class UserUnFollowView(LoginRequiredMixin,View):
 
 # End Follow and UnFollow
 
+class EditUserView(LoginRequiredMixin,View):
+    form_class = EditUserForm
+
+    def get(self,request):
+        form = self.form_class(instance=request.user.profile,initial={'email':request.user.email})
+        return render(request,'account/edit_profile.html',{'form':form})
+
+    def post(self,request):
+        form = self.form_class(request.POST,instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            request.user.email = form.cleaned_data['email']
+            request.user.save()
+            messages.success(request,'Profile Edited Successfully','success')
+        return redirect('account:user_profile',request.user.id)

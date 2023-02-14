@@ -10,7 +10,7 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
 
 class ExtendedUserAdmin(UserAdmin):
-    inlines = (ProfileInline)
+    inlines = (ProfileInline,)
 
 admin.site.unregister(User)
 admin.site.register(User ,ExtendedUserAdmin)

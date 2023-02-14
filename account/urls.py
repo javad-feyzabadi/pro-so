@@ -4,7 +4,7 @@ from . views import (UserRegisterview,UserLoginView,
                      UserPasswordResetView,
                      UserPasswordResetDoneView,UserPasswordResetConfirmView,
                      UserPasswordResetCompleteView,UserFollowView,
-                     UserUnFollowView,
+                     UserUnFollowView,EditUserView,
 )
 
 
@@ -21,7 +21,7 @@ urlpatterns = [
     path('confirm/complete/',UserPasswordResetCompleteView.as_view(),name='password_reset_complete'),
     path('follow/<int:user_id>/',UserFollowView.as_view(),name='user_follow'),
     path('unfollow/<int:user_id>/',UserUnFollowView.as_view(),name='user_unfollow'),
-
+    path('edit_user/',EditUserView.as_view(),name='edit_user')
 
 
 

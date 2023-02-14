@@ -5,6 +5,8 @@
     <hr>
     {% if request.user.id == user.id%}
         <a class="btn btn-primary" href="{% url 'home:post_create' %}">Create Post</a>
+        <a class="btn btn-info" href="{% url 'account:edit_user' %}">Edit profile</a>
+
         <br><br>
     {% endif %}
 
